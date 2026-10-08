@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "frogs"
+version = "1.0.0"
+description = "FrOGS: a discrete neural sampler for alloy configurations across chemical conditions"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.9"
+authors = [{ name = "Kyucheol Min" }, { name = "Elyssa Hofgard" }, { name = "Tess Smidt" }]
+dependencies = [
+    "torch>=2.4",
+    "lightning>=2.1",
+    "numpy>=1.21",
+    "scipy>=1.9",
+    "matplotlib>=3.5",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+wandb = ["wandb>=0.15"]
+tables = ["clease>=1.0", "ase>=3.22"]
+dev = ["pytest>=7.0"]
+
+[project.urls]
+Paper = "https://arxiv.org/abs/2609.02948"
+
+[tool.setuptools.packages.find]
+include = ["frogs*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

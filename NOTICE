@@ -1,0 +1,24 @@
+FrOGS
+Copyright (c) 2026 The FrOGS Authors. Distributed under the MIT License (see LICENSE).
+
+LEAPS
+-----
+The CTMC transport, the discrete Jarzynski log-weight, the locally equivariant rate-matrix
+parametrization and the PINN objective follow
+
+    P. Holderrieth, M. S. Albergo and T. Jaakkola, "LEAPS: A discrete neural sampler via locally
+    equivariant networks", ICML 2025. https://github.com/malbergo/leaps
+
+frogs/sampler.py, frogs/nets/transport.py, frogs/nets/free_energy.py and frogs/trainer.py are derived
+from that reference implementation; consult its license before redistributing those portions.
+
+Cluster expansions, metadynamics reference data and the SEGAL baseline
+----------------------------------------------------------------------
+The AgPd and CuAu effective cluster interactions and the metadynamics reference free energies in
+data/reference/, and the SEGAL model reimplemented in baselines/segal/, are from
+
+    J. Damewood, D. Schwalbe-Koda and R. Gomez-Bombarelli, "Sampling lattices in semi-grand
+    canonical ensemble with autoregressive machine learning", npj Comput. Mater. 8, 61 (2022).
+    https://github.com/learningmatter-mit/Segal
+
+redistributed under the MIT License; the upstream notice is kept in data/reference/LICENSE-Segal.

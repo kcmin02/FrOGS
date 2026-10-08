@@ -1,0 +1,27 @@
+Every file in this directory is redistributed from a third party. None of it
+is an input to FrOGS; it is the ground truth the results are checked against,
+plus the cluster expansions the energy is built from.
+
+Source:
+
+    J. Damewood, D. Schwalbe-Koda and R. Gomez-Bombarelli,
+    "Sampling lattices in semi-grand canonical ensemble with autoregressive
+    machine learning", npj Computational Materials 8, 61 (2022).
+    doi:10.1038/s41524-022-00736-4
+    https://github.com/learningmatter-mit/Segal
+
+Files:
+
+    ECI_CuAu_Final_Submission.json          CuAu effective cluster interactions
+    agpd_dft_eci_final_submission.json      AgPd effective cluster interactions
+    CuAu_128_ref_meta_data_final_submission.npy   metadynamics F(x, T), CuAu 128
+    AgPd_125_ref_meta_data_final_submission.npy   metadynamics F(x, T), AgPd 125
+    plotter_concs_final_submission.csv      published phase-boundary compositions
+    plotter_temps_final_submission.csv      published phase-boundary temperatures
+
+Redistributed under the MIT License. The upstream copyright notice is kept
+verbatim in LICENSE-Segal and applies to every file listed above.
+
+The files are byte-identical to the originals; nothing has been re-fit,
+re-scaled or re-sampled. See ../README.md for what each one contains and
+which figure reads it.

@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# outputs of training, sweeps and figures
+/results/
+/figures/
+wandb/
+*.ckpt
+*.tmp.npz

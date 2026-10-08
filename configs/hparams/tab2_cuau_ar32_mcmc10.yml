@@ -1,0 +1,40 @@
+# Table 2 arm: AR width 32, n_mcmc 10, flat transport (n_l = 0, 20 convs).
+system: cuau_ce
+lattice_shape: [8, 4, 4]
+table_path: data/cuau_cluster_tables_8x4x4.npz
+cond_low: [-0.2, 200.0]       # [dmu (eV), T (K)]
+cond_high: [0.15, 1200.0]
+
+prior: autoregressive
+prior_net: {num_layers: 4, num_channels: 32, kernel_size: 3}
+prior_lr: 1.0e-4
+prior_backend: systems        # fused Triton kernels; `reference` restores the original arithmetic
+
+transport: true
+num_levels: 0
+kernel_size: 3
+num_channels: 16
+encoder_convs: 20
+decoder_convs: 20
+loo_context: true
+metropolis_rates: true        # Eq. (7)
+
+free_energy_hidden: [200, 200, 200, 200]
+lr: 3.0e-4
+lr_gamma: 0.995
+lr_step: 1000
+grad_clip: 1000
+max_steps: 200000
+
+n_steps: 125
+starting_k: 1
+n_anneal: 60000
+n_mcmc: 10
+batch_size: 50
+loss_batch_size: 100
+buffer_size: 100
+buffer_cycle: 100
+
+wandb_project: frogs-cuau
+run_tag: tab2-cuau-ar32-mcmc10
+seed:

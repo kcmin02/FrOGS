@@ -1,0 +1,37 @@
+# 2D Ising, L = 15 (Fig. 9).
+system: ising
+lattice_shape: [15, 15]
+J: 1.0
+cond_low: [-0.05, 1.5]        # [h, T] in units of J
+cond_high: [0.05, 3.0]
+
+prior: autoregressive
+prior_net: {num_layers: 4, num_channels: 32, kernel_size: 3}
+prior_lr: 1.0e-4
+
+transport: true
+num_levels: 2
+kernel_size: 3
+num_channels: 16
+encoder_convs: 1
+decoder_convs: 1
+
+free_energy_hidden: [200, 200, 200, 200]
+lr: 3.0e-4
+lr_gamma: 0.995
+lr_step: 1000
+grad_clip: 1000
+max_steps: 200000
+
+n_steps: 125
+starting_k: 1
+n_anneal: 60000
+n_mcmc: 10
+batch_size: 50
+loss_batch_size: 50
+buffer_size: 100
+buffer_cycle: 100
+
+wandb_project: frogs-ising
+run_tag: ising-L15
+seed:
