@@ -33,6 +33,7 @@ DEFAULTS = dict(
     decoder_convs=1,
     loo_context=False,
     metropolis_rates=False,
+    full_grad=True,
     free_energy_hidden=[200, 200, 200, 200],
     lr=3e-4,
     lr_gamma=0.995,
@@ -42,7 +43,7 @@ DEFAULTS = dict(
     n_steps=125,
     starting_k=1,
     n_anneal=60_000,
-    n_mcmc=10,
+    n_mcmc=40,
     batch_size=50,
     loss_batch_size=100,
     buffer_size=100,
@@ -110,6 +111,8 @@ def _translate_legacy(cfg: dict) -> dict:
     prior_net = _as_dict(out.get("prior_net"))
     if prior_net.get("local_flip_mode") == "triton" or prior_net.get("triton_sampling"):
         out.setdefault("prior_backend", "systems")
+    if "detach_corrector_dH" in out:
+        out.setdefault("full_grad", not bool(out.pop("detach_corrector_dH")))
     if "compile_ar" in prior_net:
         out.setdefault("compile_prior", bool(prior_net["compile_ar"]))
     if prior_net:
@@ -119,7 +122,7 @@ def _translate_legacy(cfg: dict) -> dict:
     for dead in ("L", "path", "J_0", "mu_0", "mu_1", "B_0", "B_1", "beta_0", "beta_1",
                  "in_channels", "arch", "cond_dim", "couple_prior", "use_buffer",
                  "anneal_quadratic", "warm_up", "accelerator", "num_workers", "plot_every",
-                 "ce_dedupe", "detach_corrector_dH", "training_fastpaths",
+                 "ce_dedupe", "training_fastpaths",
                  "reuse_step_quantities", "compile_qnet", "compile_qnet_mode",
                  "prior_ckpt", "ar_direct_ckpt", "ckpt_fname", "wandb_name", "results_dir"):
         out.pop(dead, None)

@@ -27,7 +27,7 @@ max_steps: 200000
 n_steps: 125
 starting_k: 1
 n_anneal: 60000
-n_mcmc: 10
+n_mcmc: 40
 batch_size: 50
 loss_batch_size: 100
 buffer_size: 100

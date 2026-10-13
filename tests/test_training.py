@@ -68,6 +68,26 @@ def test_two_training_steps(name, tmp_path):
     assert model._skips == 0 and len(model.buffer) == 2
 
 
+def test_full_grad_reaches_the_prior_through_the_rates():
+    """full_grad adds the acceptance-path term to the prior gradient; the rest is unchanged."""
+    grads = {}
+    for full in (False, True):
+        L.seed_everything(0)
+        model = FrOGSModule(argparse.Namespace(**{**vars(tiny_config("alloy")), "full_grad": full}))
+        k = 3
+        ts = torch.linspace(0.0, k * model.dt, k + 1)
+        sigmas, As, c = model._rollout(k, ts)
+        torch.manual_seed(1)
+        model.buffer = [(sigmas, As, k, ts, c)] * model.config.buffer_size
+        loss = model.training_step(None, 0)
+        loss.backward()
+        grads[full] = {n: p.grad.clone() for n, p in model.named_parameters() if p.grad is not None}
+    off, on = grads[False], grads[True]
+    assert off.keys() == on.keys()
+    assert all(torch.equal(off[n], on[n]) for n in off if not n.startswith("prior."))
+    assert any(not torch.equal(off[n], on[n]) for n in off if n.startswith("prior."))
+
+
 def test_checkpoint_roundtrip_and_legacy_prefixes(tmp_path):
     L.seed_everything(0)
     model = FrOGSModule(tiny_config("alloy"))

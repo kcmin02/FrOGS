@@ -127,7 +127,8 @@ class FrOGSModule(L.LightningModule):
         if self.transport is None:
             corrector = 0.0
         else:
-            with torch.no_grad():
+            # full_grad also passes the prior's gradient through the Metropolis rates of the corrector.
+            with torch.set_grad_enabled(bool(cfg.full_grad)):
                 _, dU = self.energy.Ut(sigma, t, cond)
             corrector = self.transport.corrector(sigma, t, dU, cond)
         residual = -self.energy.dtUt(sigma, t, cond) - corrector + self.free_energy.gradt(t, cond)
