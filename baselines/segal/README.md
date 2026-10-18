@@ -1,8 +1,8 @@
 # SEGAL baseline (Fig. 3c, 3d)
 
 SEGAL (Damewood, Schwalbe-Koda and Gómez-Bombarelli, *npj Comput. Mater.* **8**, 61 (2022)) is an
-autoregressive network over the lattice sites, conditioned on the temperature and a field coupled to
-sum(sigma). We do not retrain it. `model.py` re-implements the network so that the released weights
+autoregressive network over the lattice sites. We did not retrain it and used their pretrained model in their repo (https://github.com/learningmatter-mit/Segal).
+`model.py` re-implements the network so that the released weights
 load unchanged, and `sweep.py` draws M = 5000 samples per condition and writes their importance
 weights as a sweep file, which the phase diagram constructor (§A.4) reads like a FrOGS sweep.
 
@@ -31,8 +31,6 @@ steps over 200-900 K and 200-1200 K. `--field`, `--T` and `--M` select other gri
 
 ## Conventions
 
-* dmu = 2 field for AgPd. The CuAu notebook subtracts the composition-weighted pure-element
-  energies, which shifts it to dmu = 2 field + (U_Au - U_Cu)/N = 2 field - 5.33 meV.
 * A = -beta U_CE + beta dmu N_+ - log P_AR, with U_CE from `frogs.energy.ClusterExpansion` and the
   cluster tables in `data/`. P_AR is normalized, so log Z = log mean e^A (`logZ_raw`; `logZ` is the
   second-cumulant estimate, as in the FrOGS sweeps).

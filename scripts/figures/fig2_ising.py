@@ -89,27 +89,22 @@ def _finish(ax, xlabel, ylabel, handles=None, letter="", tc=True):
 def plot(common, arms, out):
     T = common["T"]
     tlabel = "$T$ ($J/k_B$)"
-    fig, axes = plt.subplots(2, 3, figsize=(21.0, 10.4))
-    (ax_f, ax_u, ax_ess), (ax_c, ax_g, ax_m) = axes
+    fig, axes = plt.subplots(2, 2, figsize=(14.0, 10.4))
+    (ax_f, ax_ess), (ax_c, ax_g) = axes
 
     for name, (_, color, z) in ARMS.items():
         a = arms[name]
-        style = dict(marker="o", ms=5.5, lw=1.8, color=color, capsize=3, zorder=z)
-        ax_f.errorbar(T, a["F_per"], yerr=a["F_per_se"], **style)
-        ax_u.errorbar(T, a["U_per"], yerr=a["U_per_se"], **style)
+        ax_f.errorbar(T, a["F_per"], yerr=a["F_per_se"], marker="o", ms=5.5, lw=1.8, color=color,
+                      capsize=3, zorder=z)
         ax_ess.plot(T, a["ess"], marker="o", ms=5.5, lw=1.8, color=color, zorder=z)
-        ax_m.errorbar(T, a["pos_mass"], yerr=a["pos_mass_se"], **style)
-        ax_m.plot(T, a["pos_raw"], marker="x", ms=6.5, ls=":", lw=1.4, color=color, zorder=z - 1)
-    for ax, key in ((ax_f, "F_exact"), (ax_u, "U_exact")):
-        ax.plot(T, common[key], "k-", lw=2.4, alpha=0.7, zorder=1)
-    for ax in (ax_f, ax_u, ax_ess, ax_m):
+    ax_f.plot(T, common["F_exact"], "k-", lw=2.4, alpha=0.7, zorder=1)
+    for ax in (ax_f, ax_ess):
         ax.set_xticks([1.5, 2.0, 2.5, 3.0])
     _finish(ax_f, tlabel, "$F/N$", letter="(a)")
-    _finish(ax_u, tlabel, "$U/N$", letter="(b)")
     ax_ess.set_yscale("log")
-    _finish(ax_ess, tlabel, "ESS", letter="(c)")
+    _finish(ax_ess, tlabel, "ESS", letter="(b)")
 
-    # (d) C/N = d(U/N)/dT of the transport arm; the exact U goes through the same smoother.
+    # (c) C/N = d(U/N)/dT of the transport arm; the exact U goes through the same smoother.
     a = arms["transport"]
     ref, = ax_c.plot(T, common["C_exact_smoothed"], "k--", lw=2.2, alpha=0.75, zorder=1,
                      label="reference")
@@ -118,7 +113,7 @@ def plot(common, arms, out):
     finite = np.isfinite(common["C_exact_smoothed"]) | np.isfinite(a["C"])
     if finite.any():
         ax_c.set_xlim(T[finite].min() - 0.06, T[finite].max() + 0.06)
-    _finish(ax_c, tlabel, "$C/N$ ($k_B$)", handles=[ref], letter="(d)")
+    _finish(ax_c, tlabel, "$C/N$ ($k_B$)", handles=[ref], letter="(c)")
 
     j = int(np.argmin(np.abs(T - common["T_gr"])))
     r = common["r"]
@@ -131,20 +126,13 @@ def plot(common, arms, out):
     ax_g.set_xticks(r)
     ax_g.grid(alpha=0.3)
     _finish(ax_g, "$r$ (lattice spacings)", r"$G(r)=\langle \sigma_0\sigma_r\rangle$",
-            handles=[wolff], letter="(e)", tc=False)
-
-    ax_m.axhline(0.5, color="k", lw=1.8, alpha=0.7)
-    ax_m.set_ylim(-0.02, 1.02)
-    ax_m.set_yticks(np.linspace(0.0, 1.0, 6))
-    keys = [Line2D([], [], color="0.35", marker="o", ms=5.5, lw=1.8, label="IS-weighted"),
-            Line2D([], [], color="0.35", ls=":", marker="x", ms=6.5, lw=1.4, label="raw draws")]
-    _finish(ax_m, tlabel, "mass at $m>0$", handles=keys, letter="(f)")
+            handles=[wolff], letter="(d)", tc=False)
 
     shared = [Line2D([], [], color=c, marker="o", ms=6.5, lw=2.0, label=lab)
               for lab, c, _ in ARMS.values()]
     shared.append(Line2D([], [], color="k", lw=2.4, alpha=0.7, label="Kaufman exact"))
     fig.legend(handles=shared, loc="upper center", ncol=3, fontsize=FS, frameon=False,
-               bbox_to_anchor=(0.5, 1.005), columnspacing=3.0)
+               bbox_to_anchor=(0.5, 1.005), columnspacing=2.0)
     fig.tight_layout(w_pad=3.0, h_pad=2.6, rect=(0.0, 0.0, 1.0, 0.955))
     fig.savefig(out, dpi=200, bbox_inches="tight")
     plt.close(fig)
