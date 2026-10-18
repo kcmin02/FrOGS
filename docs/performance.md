@@ -57,6 +57,6 @@ after 3 warm-ups, one RTX A5000 shared with another job (timings are indicative)
 | loss + backward on a replayed trajectory | 67.4 | 71.6 | 0.9x |
 
 Repeated runs on the shared GPU varied by up to a factor 1.7 in absolute time. Peak allocated GPU
-memory was 0.11 GiB. The loss step's Delta U_t carries gradients and keeps the reference path, so
-the loss step gains nothing; the reference flip scorer evaluates B x N flipped lattices, so the gain
-in scoring and rollouts grows with the cell size.
+memory was 0.11 GiB. The loss step uses the backend only for its no-grad Delta U_t, so it gains
+nothing at 128 sites; the reference flip scorer evaluates B x N flipped lattices, so the gain in
+scoring and rollouts grows with the cell size.
