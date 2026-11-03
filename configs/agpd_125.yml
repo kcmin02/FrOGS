@@ -6,7 +6,7 @@ cond_low: [-0.4, 200.0]       # [dmu (eV), T (K)]
 cond_high: [0.4, 900.0]
 
 prior: autoregressive
-prior_net: {num_layers: 4, num_channels: 32, kernel_size: 3}
+prior_net: {num_layers: 4, num_channels: 64, kernel_size: 3}
 prior_lr: 1.0e-4
 prior_backend: systems        # fused Triton kernels; `reference` restores the original arithmetic
 sym_penalty: 0.1
@@ -30,7 +30,7 @@ max_steps: 200000
 n_steps: 125
 starting_k: 1
 n_anneal: 60000
-n_mcmc: 10
+n_mcmc: 40
 batch_size: 50
 loss_batch_size: 100
 buffer_size: 100

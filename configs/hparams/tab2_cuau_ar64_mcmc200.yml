@@ -1,4 +1,4 @@
-# Table 2 arm: AR width 64, n_mcmc 200, flat transport (n_l = 0, 20 convs).
+# Table 2 arm: AR width 64, n_mcmc 200.
 system: cuau_ce
 lattice_shape: [8, 4, 4]
 table_path: data/cuau_cluster_tables_8x4x4.npz
@@ -12,11 +12,12 @@ prior_backend: systems        # fused Triton kernels; `reference` restores the o
 sym_penalty: 0.1
 
 transport: true
-num_levels: 0
+num_levels: 2
+pool_strides: [[2, 1, 1], [2, 2, 2]]
 kernel_size: 3
 num_channels: 16
-encoder_convs: 20
-decoder_convs: 20
+encoder_convs: 1
+decoder_convs: 1
 loo_context: true
 metropolis_rates: true        # Eq. (7)
 
