@@ -23,7 +23,7 @@ log-weights still accumulate in FP64. Results are not bitwise identical to the r
 ## Accuracy
 
 Maximum absolute error against an FP64 copy of the prior, CuAu production checkpoint (8x4x4,
-32 channels), batch 3, normalized conditions (-1, -1), (0, 0), (1, 1):
+64 channels), batch 3, normalized conditions (-1, -1), (0, 0), (1, 1):
 
 ```bash
 python scripts/checks/check_systems_accuracy.py --ckpt <run>/ckpts/last.ckpt [--shape 8 8 8]
@@ -31,13 +31,13 @@ python scripts/checks/check_systems_accuracy.py --ckpt <run>/ckpts/last.ckpt [--
 
 | lattice | quantity | systems | reference |
 | --- | --- | ---: | ---: |
-| 8x4x4 | conditional probability, every site of a sampled trajectory | 1.7e-7 | 1.3e-4 |
-| 8x4x4 | all-site flip score | 5.6e-6 | 3.6e-3 |
-| 8x8x8 | conditional probability | 2.3e-7 | 3.8e-4 |
-| 8x8x8 | all-site flip score | 7.5e-6 | 5.9e-3 |
+| 8x4x4 | conditional probability, every site of a sampled trajectory | 2.4e-7 | 1.9e-4 |
+| 8x4x4 | all-site flip score | 6.6e-6 | 1.8e-3 |
+| 8x8x8 | conditional probability | 4.1e-7 | 2.1e-4 |
+| 8x8x8 | all-site flip score | 1.1e-5 | 3.9e-3 |
 
 The reference error comes from cuDNN's default TF32 convolutions; with
-`torch.backends.cudnn.allow_tf32 = False` it drops to 2.3e-7 / 1.2e-5 on 8x4x4. At every
+`torch.backends.cudnn.allow_tf32 = False` it drops to 4.1e-7 / 1.6e-5 on 8x4x4. At every
 condition the graph-replayed sampler reproduced the reference samples and CUDA RNG state.
 
 ## Speed
@@ -51,12 +51,11 @@ after 3 warm-ups, one RTX A5000 shared with another job (timings are indicative)
 
 | operation | reference (ms) | systems (ms) | speedup |
 | --- | ---: | ---: | ---: |
-| AR sampling | 62.1 | 19.1 | 3.3x |
-| all-site flip scoring | 11.8 | 5.3 | 2.2x |
-| rollout, 8 CTMC steps, including sampling | 278.9 | 214.2 | 1.3x |
-| loss + backward on a replayed trajectory | 67.4 | 71.6 | 0.9x |
+| AR sampling | 44.3 | 20.2 | 2.2x |
+| all-site flip scoring | 13.2 | 7.1 | 1.9x |
+| rollout, 8 CTMC steps, including sampling | 233.1 | 160.0 | 1.5x |
+| loss + backward on a replayed trajectory | 61.4 | 51.5 | 1.2x |
 
-Repeated runs on the shared GPU varied by up to a factor 1.7 in absolute time. Peak allocated GPU
-memory was 0.11 GiB. The loss step uses the backend only for its no-grad Delta U_t, so it gains
-nothing at 128 sites; the reference flip scorer evaluates B x N flipped lattices, so the gain in
-scoring and rollouts grows with the cell size.
+Peak allocated GPU memory was 0.21 GiB. The loss step uses the backend only for its no-grad
+Delta U_t, so it gains little at 128 sites; the reference flip scorer evaluates B x N flipped
+lattices, so the gain in scoring and rollouts grows with the cell size.

@@ -57,7 +57,6 @@ with `scripts/merge_sweep.py --tag <tag>`. The SEGAL baseline sweeps are describ
 - Table 1: `scripts/tables/tab1_variant_chi2.py --sweep results/sweeps/cuau128.npz --seeds <seed sweeps>`
 - §A.11 tables: `scripts/tables/training_stats.py results/*/tab*/metrics.csv`
 - §A.13: `scripts/tables/gate_sensitivity.py --arm FrOGS=<sweep> --arm SEGAL=<segal sweep>`
-- §A.14, FrOGS column: `scripts/tables/tab4_lowest_ess.py results/sweeps/cuau128.npz`
 - §A.7 and other checks: `scripts/checks/`
 
 The conventional Metropolis measurements of §A.14 are not part of this repository.
