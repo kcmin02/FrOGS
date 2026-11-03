@@ -20,10 +20,13 @@ class AlloyEnergy(PathEnergy):
     beta(t) = t * beta, mu(t) = t * dmu, so rho_0 is uniform on {-1, +1}^N.
     """
 
+    field_index = 0  # dmu
+
     def __init__(self, table_path, lattice_shape, prior=None, cond_low=None, cond_high=None):
         super().__init__(prior, cond_low, cond_high)
         self.ce = ClusterExpansion(table_path, lattice_shape)
         self.lattice_shape = self.ce.lattice_shape
+        self.lattice_vectors = self.ce.prim_vectors
         self.n_sites = self.ce.n_sites
 
     def to(self, device):

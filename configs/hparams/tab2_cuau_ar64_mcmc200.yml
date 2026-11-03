@@ -9,6 +9,7 @@ prior: autoregressive
 prior_net: {num_layers: 4, num_channels: 64, kernel_size: 3}
 prior_lr: 1.0e-4
 prior_backend: systems        # fused Triton kernels; `reference` restores the original arithmetic
+sym_penalty: 0.1
 
 transport: true
 num_levels: 0

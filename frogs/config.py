@@ -34,6 +34,7 @@ DEFAULTS = dict(
     loo_context=False,
     metropolis_rates=False,
     full_grad=False,
+    sym_penalty=0.0,
     free_energy_hidden=[200, 200, 200, 200],
     lr=3e-4,
     lr_gamma=0.995,
@@ -160,6 +161,9 @@ def normalize(config, strict=False) -> argparse.Namespace:
         raise ValueError("prior_backend must be 'reference' or 'systems'")
     if cfg["system"] == "ising" and cfg["prior"] != "autoregressive":
         raise ValueError("the Ising model is implemented with the autoregressive prior only")
+    cfg["sym_penalty"] = float(cfg["sym_penalty"])
+    if cfg["sym_penalty"] < 0:
+        raise ValueError("sym_penalty must be >= 0")
     cfg["lattice_shape"] = [int(s) for s in cfg["lattice_shape"]]
     cfg["cond_low"] = [float(v) for v in cfg["cond_low"]]
     cfg["cond_high"] = [float(v) for v in cfg["cond_high"]]

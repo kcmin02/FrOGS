@@ -5,6 +5,7 @@ The 3D autoregressive prior sees the lattice as the degenerate shape (1, L, L).
 """
 from __future__ import annotations
 
+import numpy as np
 import torch
 
 from frogs.energy.base import PathEnergy
@@ -15,11 +16,14 @@ NN_OFFSETS = ((1, 0), (-1, 0), (0, 1), (0, -1))
 class IsingEnergy(PathEnergy):
     """Learned-prior path U_t = t * H / T - (1 - t) * log rho_0."""
 
+    field_index = 0  # h
+
     def __init__(self, L, prior, J=1.0, cond_low=None, cond_high=None):
         super().__init__(prior, cond_low, cond_high)
         self.L = int(L)
         self.J = float(J)
         self.lattice_shape = (self.L, self.L)
+        self.lattice_vectors = np.eye(2)
         self.n_sites = self.L * self.L
         idx = torch.arange(self.n_sites).reshape(self.L, self.L)
         self.nn_idx = torch.stack(

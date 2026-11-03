@@ -103,7 +103,7 @@ def test_defaults_fill_missing_keys():
 
 @pytest.mark.parametrize("bad", [
     dict(system="potts"), dict(prior="ar_direct_mix"), dict(prior_backend="triton"),
-    dict(system="ising", prior="uniform")])
+    dict(system="ising", prior="uniform"), dict(sym_penalty=-1.0)])
 def test_normalize_rejects_unknown_choices(bad):
     cfg = dict(system="cuau_ce", lattice_shape=[8, 4, 4], cond_low=[-0.2, 200],
                cond_high=[0.15, 1200])

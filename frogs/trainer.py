@@ -3,7 +3,9 @@
 Each step draws conditions c uniformly from the training box, births walkers from rho_0(. | c),
 rolls them out to t = k * dt, and minimizes (-d_t U_t - corrector + d_t F)^2 on (sigma, t) pairs
 from that rollout or from a replay buffer of earlier rollouts. The number of CTMC steps k
-ramps up quadratically to `n_steps` over `n_anneal` optimizer steps.
+ramps up quadratically to `n_steps` over `n_anneal` optimizer steps. `sym_penalty` adds
+sym_penalty * mean (log rho_0(sigma | c) - log rho_0(g.sigma | g.c))^2 with g uniform in the
+symmetry group of the target.
 """
 from __future__ import annotations
 
@@ -16,6 +18,7 @@ from torch.utils.data import DataLoader, Dataset
 
 from frogs.config import normalize
 from frogs.energy import make_energy
+from frogs.energy.symmetry import log_prior_gap
 from frogs.nets import FreeEnergyNet, build_prior, build_transport
 from frogs.sampler import CTMCSampler, ess
 
@@ -62,6 +65,7 @@ class FrOGSModule(L.LightningModule):
         # Construction order fixes the initial weights for a given seed: prior, transport, F.
         self.prior = build_prior(config) if config.prior == "autoregressive" else None
         self.energy = make_energy(config, self.prior)
+        self.symmetry = self.energy.symmetry_group() if config.sym_penalty > 0 else None
         self.transport = build_transport(config) if config.transport else None
         self.free_energy = FreeEnergyNet(config.free_energy_hidden, config.cond_low, config.cond_high)
 
@@ -81,6 +85,8 @@ class FrOGSModule(L.LightningModule):
 
     def setup(self, stage=None):
         self.energy.to(self.device)
+        if self.symmetry is not None:
+            self.symmetry.to(self.device)
 
     def on_fit_start(self):
         if self.prior is not None and self.config.compile_prior:
@@ -134,8 +140,16 @@ class FrOGSModule(L.LightningModule):
         residual = -self.energy.dtUt(sigma, t, cond) - corrector + self.free_energy.gradt(t, cond)
         loss = (residual ** 2).mean()
 
-        if (self.global_step + 1) % cfg.log_every == 0:
+        log = (self.global_step + 1) % cfg.log_every == 0
+        if log:
             self._log_metrics(loss, As, c, ts)
+        if cfg.sym_penalty > 0:
+            sym = (log_prior_gap(self.energy, self.symmetry, sigma, cond) ** 2).mean()
+            loss = loss + cfg.sym_penalty * sym
+            if log:
+                self.log("train_sym_penalty", sym)
+                if fresh:
+                    self._log_sym_kl(sigmas[0], c)
         return loss
 
     def _log_metrics(self, loss, As, c, ts):
@@ -151,6 +165,12 @@ class FrOGSModule(L.LightningModule):
         self.log("ess", ess(A_corr))
         self.log("A_corrected_std", A_corr.std())
         self.log("k", float(ts.numel() - 1))
+
+    @torch.no_grad()
+    def _log_sym_kl(self, sigma0, c):
+        kl = log_prior_gap(self.energy, self.symmetry, sigma0, c).mean()
+        self.log("val_sym_kl", kl)
+        self.log("val_sym_tv_bound", torch.sqrt(kl.clamp(min=0.0) / 2).clamp(max=1.0))
 
     def optimizer_step(self, epoch, batch_idx, optimizer, optimizer_closure=None):
         """Skip the update when the loss or any gradient is non-finite."""

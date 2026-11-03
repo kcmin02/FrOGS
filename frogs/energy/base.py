@@ -3,7 +3,10 @@ from __future__ import annotations
 
 import math
 
+import numpy as np
 import torch
+
+from frogs.energy.symmetry import detect_symmetry
 
 
 class PathEnergy:
@@ -14,7 +17,9 @@ class PathEnergy:
     """
 
     lattice_shape: tuple
+    lattice_vectors: np.ndarray
     n_sites: int
+    field_index = None
 
     def __init__(self, prior, cond_low, cond_high):
         self.prior = prior
@@ -50,6 +55,9 @@ class PathEnergy:
             return sigma.reshape(c.shape[0], *self.lattice_shape)
         sigma = 2 * torch.randint(0, 2, (c.shape[0], *self.lattice_shape), device=c.device) - 1
         return sigma.to(torch.get_default_dtype())
+
+    def symmetry_group(self, device=None):
+        return detect_symmetry(self, device)
 
     def to(self, device):
         if self.prior is not None:

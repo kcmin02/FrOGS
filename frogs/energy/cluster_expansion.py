@@ -12,6 +12,7 @@ import numpy as np
 import torch
 
 K_MAX = 4  # largest cluster in the shipped expansions
+FCC_PRIMITIVE = np.array([[0.0, 0.5, 0.5], [0.5, 0.0, 0.5], [0.5, 0.5, 0.0]])
 
 
 def _reduce_row_mod2(row, n_sites):
@@ -44,6 +45,8 @@ class ClusterExpansion:
             raise ValueError(f"table lattice {tuple(data['lattice_shape'])} != {lattice_shape}")
         self.lattice_shape = lattice_shape
         self.n_sites = n_sites
+        cell = data.get("ase_cell", FCC_PRIMITIVE * np.array(lattice_shape)[:, None])
+        self.prim_vectors = np.asarray(cell, dtype=np.float64) / np.array(lattice_shape)[:, None]
 
         prim = data["prim_coords"]
         to_grid = (prim[:, 0] * Ly * Lz + prim[:, 1] * Lz + prim[:, 2]).astype(np.int64)
