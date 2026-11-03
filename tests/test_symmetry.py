@@ -244,6 +244,16 @@ def test_ising_flip_maps_h_to_minus_h():
     assert torch.equal(out, sigma) and torch.equal(c_out, c)
 
 
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="needs a GPU")
+def test_group_follows_the_states_to_the_gpu():
+    energy = build("ising")
+    group = energy.symmetry_group()
+    energy.to("cuda")
+    sigma = random_spins(4, energy.lattice_shape).cuda()
+    gap = log_prior_gap(energy, group, sigma, random_conditions(energy, 4).cuda())
+    assert gap.device.type == "cuda" and group.point.device.type == "cuda"
+
+
 @pytest.mark.usefixtures("float64")
 @pytest.mark.parametrize("system", ["ising", "cuau", "agpd"])
 def test_hamiltonian_is_invariant(system):

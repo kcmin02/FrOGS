@@ -71,6 +71,8 @@ class SymmetryGroup:
         return q, r
 
     def apply(self, g, sigma, c):
+        if self.point.device != sigma.device:
+            self.to(sigma.device)
         q, r = g
         idx = self.point[q].gather(1, self.translation[r])
         out = sigma.reshape(sigma.shape[0], -1).gather(1, idx).reshape(sigma.shape)
