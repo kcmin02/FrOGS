@@ -63,8 +63,8 @@ The conventional Metropolis measurements of §A.14 are not part of this reposito
 
 ## Run experiments for a different energy model
 
-A new system needs an annealing path U_t between the prior and its Boltzmann target. Use
-`frogs/energy/alloy.py` (cluster expansions) and `frogs/energy/ising.py` as guiding examples, and
+A new system needs its Hamiltonian H_c(σ) and the change in H_c under each single-site flip. Use
+`frogs/energy/alloy.py` (cluster expansions) and `frogs/energy/ising.py` as templates, and
 `scripts/tools/dump_cluster_tables.py` to build the cluster table of a new cell.
 
 ## Analysis of trained models
