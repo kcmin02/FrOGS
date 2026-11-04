@@ -38,4 +38,4 @@ buffer_cycle: 100
 
 wandb_project: frogs-agpd
 run_tag: agpd125
-seed:
+seed: 1

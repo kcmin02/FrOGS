@@ -35,4 +35,4 @@ buffer_cycle: 100
 
 wandb_project: frogs-ising
 run_tag: hparams-ising-L20-nl2-enc1
-seed:
+seed: 1

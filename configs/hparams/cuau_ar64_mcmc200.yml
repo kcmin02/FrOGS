@@ -39,4 +39,4 @@ buffer_cycle: 100
 
 wandb_project: frogs-cuau
 run_tag: hparams-cuau-ar64-mcmc200
-seed:
+seed: 1

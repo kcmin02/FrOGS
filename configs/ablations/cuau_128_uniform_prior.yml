@@ -35,4 +35,4 @@ buffer_cycle: 100
 
 wandb_project: frogs-cuau
 run_tag: cuau128-uniform-prior
-seed:
+seed: 1

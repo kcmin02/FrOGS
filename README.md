@@ -18,7 +18,8 @@ pytest
 ```
 
 Training and sweeps need a GPU. The fused prior kernels (`prior_backend: systems`, see
-[docs/performance.md](docs/performance.md)) need an Ampere-or-newer GPU.
+[docs/performance.md](docs/performance.md)) run on Ampere-or-newer GPUs; elsewhere the prior uses
+plain PyTorch.
 
 ## Train models
 
@@ -49,13 +50,14 @@ with `scripts/merge_sweep.py --tag <tag>`. The SEGAL baseline sweeps are describ
 
 ## Reproduce figures and tables
 
-- Fig. 2, Fig. 9: `scripts/figures/fig2_ising.py --ckpt <ising ckpt>`, then `scripts/figures/fig9_ising_multiscale.py`
+- Fig. 2, Fig. 9: `scripts/figures/fig2_ising.py --ckpt <ising ckpt>` for L = 10, 15 and 20, then `scripts/figures/fig9_ising_multiscale.py`
 - Fig. 3: `scripts/figures/fig3_phase_diagram.py --sweep results/sweeps/cuau128.npz` (add `--label SEGAL` for SEGAL sweeps)
 - Fig. 4, Fig. 6: `scripts/figures/fig4_ess_map.py --sweep <sweep> ...`
 - Fig. 7: `scripts/figures/fig7_variant_coverage.py --sweep <uniform-prior sweep>`
 - Fig. 10: `scripts/figures/fig10_seed_panels.py --panel "seed 1=<sweep>" ...`
 - Table 1: `scripts/tables/tab1_variant_chi2.py --sweep results/sweeps/cuau128.npz`
-- §A.11 tables: `scripts/tables/training_stats.py results/*/hparams-*/metrics.csv`
+- §A.11 tables: `scripts/tables/training_stats.py results/*/hparams-*/metrics.csv` (train the
+  `configs/hparams/` runs with `--offline`, which writes `metrics.csv`)
 - §A.13: `scripts/tables/gate_sensitivity.py --arm FrOGS=<sweep> --arm SEGAL=<segal sweep>`
 - §A.7 and other checks: `scripts/checks/`
 
@@ -64,8 +66,9 @@ The conventional Metropolis measurements of §A.14 are not part of this reposito
 ## Run experiments for a different energy model
 
 A new system needs its Hamiltonian H_c(σ). Use `frogs/energy/alloy.py` (cluster expansions) and
-`frogs/energy/ising.py` as templates, and `scripts/tools/dump_cluster_tables.py` to build the
-cluster table of a new cell.
+`frogs/energy/ising.py` as templates, register the class in `SYSTEMS` (`frogs/config.py`) and
+`make_energy` (`frogs/energy/__init__.py`), and use `scripts/tools/dump_cluster_tables.py` to build
+the cluster table of a new cell.
 
 ## Analysis of trained models
 

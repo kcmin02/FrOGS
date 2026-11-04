@@ -35,4 +35,4 @@ buffer_cycle: 100
 
 wandb_project: frogs-ising
 run_tag: ising-L15
-seed:
+seed: 1
