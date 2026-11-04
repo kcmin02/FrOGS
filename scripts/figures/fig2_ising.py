@@ -2,7 +2,7 @@
 
 Rolls out M walkers per temperature with the learned transport and with the prior alone (Q = 0),
 and writes a results npz that `--results` and fig9_ising_multiscale.py replot:
-    python scripts/figures/fig2_ising.py --ckpt <run>/last.ckpt --M 5000
+    python scripts/figures/fig2_ising.py --ckpt <run>/ckpts/last.ckpt --M 5000
     python scripts/figures/fig2_ising.py --results results/ising/ising_L20.npz
 """
 from __future__ import annotations
@@ -30,9 +30,10 @@ ARMS = {"transport": ("autoregressive + transport", "tab:orange", 5),
 FS = 21
 
 
-def rollout(model, T, M, transport, chunk, seed, device):
+def rollout(model, T, M, transport, chunk, seed, device, n_steps=None):
     """Log-weights A (n_T, M), spins (n_T, M, L, L) and the packed spins at h = 0."""
-    ev = ISEvaluator(model, M=M, n_mcmc=0, seed=seed, device=device, transport=transport)
+    ev = ISEvaluator(model, M=M, n_steps=n_steps, n_mcmc=0, seed=seed, device=device,
+                     transport=transport)
     res = ev.run([0.0], T, chunk=chunk, n_boot=0, store_A=True, store_sigma=True, verbose=True)
     L = model.energy.L
     packed = res["sigma_packed"][0]
@@ -52,7 +53,7 @@ def evaluate(args):
     for name in ARMS:
         print(f"[{name}] M={args.M} at {len(T)} temperatures")
         A, spins, packed = rollout(model, T, args.M, name == "transport", args.chunk,
-                                   args.seed, device)
+                                   args.seed, device, n_steps=args.n_steps)
         arms[name] = readout(A, spins, T, seed=args.seed)
         arms[name]["sigma_packed"] = packed
 
@@ -64,7 +65,8 @@ def evaluate(args):
                   logZ_exact=exact[:, 0], F_exact=-T * exact[:, 0] / N, U_exact=exact[:, 1],
                   C_exact=exact[:, 2], C_exact_smoothed=heat_capacity(T, exact[:, 1])[0],
                   G_wolff=G_w, G_wolff_se=G_w_se)
-    meta = dict(ckpt=os.path.basename(args.ckpt), M=args.M, n_steps=int(model.config.n_steps),
+    meta = dict(ckpt=os.path.basename(args.ckpt), M=args.M,
+                n_steps=int(args.n_steps or model.config.n_steps),
                 n_mcmc=0, seed=args.seed, wolff_meas=args.wolff_meas)
     out = args.out or os.path.join(ensure_dir(os.path.join(RESULTS_DIR, "ising")),
                                    f"ising_L{L}.npz")
@@ -89,22 +91,26 @@ def _finish(ax, xlabel, ylabel, handles=None, letter="", tc=True):
 def plot(common, arms, out):
     T = common["T"]
     tlabel = "$T$ ($J/k_B$)"
-    fig, axes = plt.subplots(2, 2, figsize=(14.0, 10.4))
-    (ax_f, ax_ess), (ax_c, ax_g) = axes
+    fig, axes = plt.subplots(2, 3, figsize=(21.0, 10.4))
+    (ax_f, ax_u, ax_ess), (ax_c, ax_g, ax_m) = axes
 
     for name, (_, color, z) in ARMS.items():
         a = arms[name]
         ax_f.errorbar(T, a["F_per"], yerr=a["F_per_se"], marker="o", ms=5.5, lw=1.8, color=color,
                       capsize=3, zorder=z)
+        ax_u.errorbar(T, a["U_per"], yerr=a["U_per_se"], marker="o", ms=5.5, lw=1.8, color=color,
+                      capsize=3, zorder=z)
         ax_ess.plot(T, a["ess"], marker="o", ms=5.5, lw=1.8, color=color, zorder=z)
     ax_f.plot(T, common["F_exact"], "k-", lw=2.4, alpha=0.7, zorder=1)
-    for ax in (ax_f, ax_ess):
+    ax_u.plot(T, common["U_exact"], "k-", lw=2.4, alpha=0.7, zorder=1)
+    for ax in (ax_f, ax_u, ax_ess, ax_m):
         ax.set_xticks([1.5, 2.0, 2.5, 3.0])
     _finish(ax_f, tlabel, "$F/N$", letter="(a)")
+    _finish(ax_u, tlabel, "$U/N$", letter="(b)")
     ax_ess.set_yscale("log")
-    _finish(ax_ess, tlabel, "ESS", letter="(b)")
+    _finish(ax_ess, tlabel, "ESS", letter="(c)")
 
-    # (c) C/N = d(U/N)/dT of the transport arm; the exact U goes through the same smoother.
+    # (d) C/N = d(U/N)/dT of the transport arm; the exact U goes through the same smoother.
     a = arms["transport"]
     ref, = ax_c.plot(T, common["C_exact_smoothed"], "k--", lw=2.2, alpha=0.75, zorder=1,
                      label="reference")
@@ -113,7 +119,7 @@ def plot(common, arms, out):
     finite = np.isfinite(common["C_exact_smoothed"]) | np.isfinite(a["C"])
     if finite.any():
         ax_c.set_xlim(T[finite].min() - 0.06, T[finite].max() + 0.06)
-    _finish(ax_c, tlabel, "$C/N$ ($k_B$)", handles=[ref], letter="(c)")
+    _finish(ax_c, tlabel, "$C/N$ ($k_B$)", handles=[ref], letter="(d)")
 
     j = int(np.argmin(np.abs(T - common["T_gr"])))
     r = common["r"]
@@ -126,7 +132,16 @@ def plot(common, arms, out):
     ax_g.set_xticks(r)
     ax_g.grid(alpha=0.3)
     _finish(ax_g, "$r$ (lattice spacings)", r"$G(r)=\langle \sigma_0\sigma_r\rangle$",
-            handles=[wolff], letter="(d)", tc=False)
+            handles=[wolff], letter="(e)", tc=False)
+
+    # (f) Share of the transport arm's samples with m > 0, importance-weighted and raw.
+    ax_m.axhline(0.5, color="k", lw=1.6, zorder=1)
+    w = ax_m.errorbar(T, a["pos_mass"], yerr=a["pos_mass_se"], marker="o", ms=6.0, lw=2.0,
+                      color="tab:orange", capsize=3, zorder=3, label="weighted")
+    raw, = ax_m.plot(T, a["pos_raw"], marker="o", ms=6.0, lw=1.6, ls="--", color="tab:orange",
+                     mfc="white", zorder=2, label="raw")
+    ax_m.set_ylim(0.0, 1.0)
+    _finish(ax_m, tlabel, "mass at $m>0$", handles=[w, raw], letter="(f)")
 
     shared = [Line2D([], [], color=c, marker="o", ms=6.5, lw=2.0, label=lab)
               for lab, c, _ in ARMS.values()]
@@ -162,6 +177,8 @@ def main():
     ap.add_argument("--chunk", type=int, default=40,
                     help="walkers per rollout batch (40 needs about 5 GB of GPU memory at L = 20)")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--n-steps", type=int, default=None,
+                    help="CTMC steps at evaluation (default: the training value)")
     ap.add_argument("--wolff-meas", type=int, default=20000, help="measurements per Wolff chain")
     ap.add_argument("--out", default=None, help="default results/ising/ising_L<L>.npz")
     ap.add_argument("--fig", default=None, help="default figures/fig2_ising_L<L>.png")

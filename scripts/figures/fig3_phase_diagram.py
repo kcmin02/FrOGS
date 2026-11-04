@@ -1,6 +1,6 @@
 """Fig. 3: binodal from the §A.4 constructor, over the metadynamics reference.
 
-    python scripts/figures/fig3_phase_diagram.py --sweep results/sweeps/cuau_128.npz
+    python scripts/figures/fig3_phase_diagram.py --sweep results/sweeps/cuau128.npz
     python scripts/figures/fig3_phase_diagram.py --sweep <segal_sweep>.npz --label SEGAL
 """
 from __future__ import annotations
@@ -28,6 +28,8 @@ def main():
                     help="default: read from the sweep meta")
     ap.add_argument("--t-max", type=float, default=None, help="upper T axis limit (display only)")
     ap.add_argument("--out", default=None, help="figure path; rungs are saved next to it as .npz")
+    ap.add_argument("--fontsize", type=float, default=14.0,
+                    help="axis-label size; ticks and legend scale with it")
     args = ap.parse_args()
 
     diagram = construct_phase_diagram(args.sweep)
@@ -53,7 +55,7 @@ def main():
     fig, ax = plt.subplots(figsize=(6.5, 5.5))
     draw_binodal(ax, diagram, system, label=args.label,
                  t_max=args.t_max if args.t_max is not None else T_MAX.get(system),
-                 fontsize=14)
+                 fontsize=args.fontsize)
     fig.tight_layout()
     fig.savefig(out, dpi=160)
     rungs_path = os.path.splitext(out)[0] + ".npz"
