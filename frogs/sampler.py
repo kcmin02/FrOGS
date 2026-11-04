@@ -1,7 +1,7 @@
 """CTMC transport with discrete Jarzynski log-weights (§3, §A.2).
 
 Walkers born from rho_0 are moved by the learned rate matrix along U_t and carry a log-weight
-A = int_0^1 K_t rho_t(X_t) dt (Eq. 16), so that E[e^A] = Z_1 / Z_0 for any rate matrix (Eq. 17).
+A = int_0^1 K_t rho_t(X_t) dt, so that E[e^A] = Z_1 / Z_0 for any rate matrix.
 Optional single-site Metropolis moves preserve rho_t after each transport step.
 """
 from __future__ import annotations
@@ -11,7 +11,7 @@ import torch
 
 
 def ess(A: torch.Tensor) -> torch.Tensor:
-    """Normalized effective sample size (sum e^A)^2 / (M sum e^2A), Eq. (1)."""
+    """Normalized effective sample size (sum e^A)^2 / (M sum e^2A)."""
     if A.numel() == 0:
         return A.new_zeros(())
     w = A - A.max()

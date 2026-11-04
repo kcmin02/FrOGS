@@ -1,4 +1,4 @@
-"""Identities of the energies and the annealing path (Eq. 11, Eq. 33), checked by brute force."""
+"""Identities of the energies and the annealing path, checked by brute force."""
 import itertools
 import math
 
@@ -111,7 +111,7 @@ def test_ising_hamiltonian_matches_explicit_bond_sum():
 
 @pytest.mark.parametrize("system", ["ising", "alloy", "alloy-uniform"])
 def test_flip_energies_match_explicit_flips(system):
-    """Delta U_t feeds the rates, the corrector (Eq. 24) and the Metropolis moves."""
+    """Delta U_t feeds the rates, the corrector and the Metropolis moves."""
     if system == "alloy-uniform":
         e, shape, c = alloy(learned=False), CELL, (0.01, 600.0)
     else:
@@ -131,7 +131,7 @@ def test_flip_energies_match_explicit_flips(system):
 
 @pytest.mark.parametrize("system", ["ising", "alloy"])
 def test_learned_prior_normalizes_to_one(system):
-    """Z_0 = 1 for any weights, which is why E[e^A] estimates Z_1 itself (Eq. 2)."""
+    """Z_0 = 1 for any weights, which is why E[e^A] estimates Z_1 itself."""
     e, shape, c = build(system)
     sigma = all_spins(shape)
     B = sigma.shape[0]
@@ -160,7 +160,7 @@ def test_endpoints_of_the_learned_prior_path(system):
 
 @pytest.mark.parametrize("system", ["ising", "alloy"])
 def test_learned_prior_path_is_linear_and_increments_telescope(system):
-    """Eq. (33) is linear in t, so the log-weight increments sum exactly to U_1 - U_0."""
+    """The path is linear in t, so the log-weight increments sum exactly to U_1 - U_0."""
     e, shape, c = build(system)
     sigma, c = random_spins(6, shape), conditions(6, *c)
     with torch.no_grad():
@@ -188,7 +188,7 @@ def test_step_terms_equal_the_separate_operations():
 
 
 def test_alloy_hamiltonian_is_ce_minus_mu_n():
-    """H_c = U_CE - dmu N_+ (Eq. 11): dmu multiplies only the count of species +1."""
+    """H_c = U_CE - dmu N_+: dmu multiplies only the count of species +1."""
     e = alloy()
     sigma = random_spins(6, CELL)
     n_plus = ((sigma.reshape(6, -1) + 1) / 2).sum(dim=1)
@@ -231,7 +231,7 @@ def test_norm_c_maps_the_box_to_the_unit_square():
 
 
 def test_ess_edge_cases():
-    """Eq. (1): 1 for equal weights whatever the offset, 1/M for one dominant weight,
+    """ESS: 1 for equal weights whatever the offset, 1/M for one dominant weight,
     finite where the unshifted exponentials overflow, 0 for no walkers."""
     for offset in (0.0, -500.0, 700.0):
         assert ess(torch.full((64,), offset)).item() == pytest.approx(1.0)

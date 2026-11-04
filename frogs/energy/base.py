@@ -13,7 +13,7 @@ class PathEnergy:
     """Base class: condition normalization and the learned prior rho_0(sigma | c).
 
     With a learned prior the path is U_t = t * U_1 - (1 - t) * log rho_0, with U_1 = beta * H_c,
-    so Z_0 = 1 and the log-weight increment U_{t+dt} - U_t is exact (Eq. 33).
+    so Z_0 = 1 and the log-weight increment U_{t+dt} - U_t is exact.
     """
 
     lattice_shape: tuple

@@ -54,8 +54,8 @@ with `scripts/merge_sweep.py --tag <tag>`. The SEGAL baseline sweeps are describ
 - Fig. 4, Fig. 6: `scripts/figures/fig4_ess_map.py --sweep <sweep> ...`
 - Fig. 7: `scripts/figures/fig7_variant_coverage.py --sweep <uniform-prior sweep>`
 - Fig. 10: `scripts/figures/fig10_seed_panels.py --panel "seed 1=<sweep>" ...`
-- Table 1: `scripts/tables/tab1_variant_chi2.py --sweep results/sweeps/cuau128.npz --seeds <seed sweeps>`
-- §A.11 tables: `scripts/tables/training_stats.py results/*/tab*/metrics.csv`
+- Table 1: `scripts/tables/tab1_variant_chi2.py --sweep results/sweeps/cuau128.npz`
+- §A.11 tables: `scripts/tables/training_stats.py results/*/hparams-*/metrics.csv`
 - §A.13: `scripts/tables/gate_sensitivity.py --arm FrOGS=<sweep> --arm SEGAL=<segal sweep>`
 - §A.7 and other checks: `scripts/checks/`
 

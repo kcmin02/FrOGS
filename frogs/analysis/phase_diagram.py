@@ -1,6 +1,6 @@
 """Phase-diagram construction of §A.4.
 
-Fixed-composition free energies f(x, T) from the importance weights (Eqs. 29-32), lower convex
+Fixed-composition free energies f(x, T) from the importance weights, lower convex
 hull of f(x) per temperature, and the width / depth / persistence gates that certify tie-lines.
 """
 from __future__ import annotations
@@ -33,7 +33,7 @@ class Gap(NamedTuple):
 
 
 def fixed_composition_free_energy(A, N, dmu, T, n_sites, w_floor=W_FLOOR):
-    """f(x) [eV/site] at one temperature, merged over the dmu conditions (Eqs. 29-32).
+    """f(x) [eV/site] at one temperature, merged over the dmu conditions.
 
     A, N: (n_mu, M) log-weights and species-1 counts. Returns (f, f_se, inflation) where f, f_se
     have length n_sites + 1 (NaN where never sampled) and f_se includes the Birge inflation.

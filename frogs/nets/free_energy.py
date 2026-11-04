@@ -1,6 +1,6 @@
 """Auxiliary free-energy network F_phi(t, c) (§A.2).
 
-Only its time derivative enters the training loss (Eq. 18); it never enters the log-weights.
+Only its time derivative enters the training loss; it never enters the log-weights.
 """
 import torch
 from torch.func import jacfwd, vmap

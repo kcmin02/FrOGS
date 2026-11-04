@@ -1,4 +1,4 @@
-"""Importance-sampling sweep of a trained model over a (dmu, T) grid (Eq. 2, Eq. 3).
+"""Importance-sampling sweep of a trained model over a (dmu, T) grid.
 
     python scripts/sweep.py --ckpt results/cuau_ce/cuau128-1/ckpts/last.ckpt \
         --n-mu 36 --n-T 41 --M 5000 --store-A --store-sigma --tag cuau128

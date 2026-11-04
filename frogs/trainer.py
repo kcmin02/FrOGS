@@ -1,4 +1,4 @@
-"""Joint training of the prior, the transport and F_phi under the PINN loss of Eq. (18).
+"""Joint training of the prior, the transport and F_phi under the PINN loss.
 
 Each step draws conditions c uniformly from the training box, births walkers from rho_0(. | c),
 rolls them out to t = k * dt, and minimizes (-d_t U_t - corrector + d_t F)^2 on (sigma, t) pairs

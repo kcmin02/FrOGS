@@ -1,4 +1,4 @@
-"""Semi-grand-canonical binary fcc alloy: H_c(sigma) = U_CE(sigma) - dmu * N_+(sigma) (Eq. 11).
+"""Semi-grand-canonical binary fcc alloy: H_c(sigma) = U_CE(sigma) - dmu * N_+(sigma).
 
 N_+ counts sites with sigma = +1 (Ag in AgPd, Au in CuAu); c = (dmu [eV], T [K]).
 """

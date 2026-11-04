@@ -1,4 +1,4 @@
-"""Exactness of the learned-prior path (Eq. 33): Z_0 = 1, U_1 = beta * H_c, telescoping log-weights.
+"""Exactness of the learned-prior path: Z_0 = 1, U_1 = beta * H_c, telescoping log-weights.
 
 Z_0 is summed over all 2^16 configurations of the 16-site CuAu cell; the 128-site production cell
 re-checks U_1 and the gradient coupling to the prior (§A.5). Exits non-zero if any check fails.

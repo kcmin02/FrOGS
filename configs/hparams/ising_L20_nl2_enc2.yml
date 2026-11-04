@@ -1,4 +1,4 @@
-# Table 3 arm: n_l = 2, 2 convs per block.
+# 2D Ising, L = 20, with num_levels 2 and 2 convs per block.
 system: ising
 lattice_shape: [20, 20]
 J: 1.0
@@ -34,5 +34,5 @@ buffer_size: 100
 buffer_cycle: 100
 
 wandb_project: frogs-ising
-run_tag: tab3-ising-L20-nl2-enc2
+run_tag: hparams-ising-L20-nl2-enc2
 seed:

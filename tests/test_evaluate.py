@@ -1,4 +1,4 @@
-"""Importance-sampling readout (Eq. 2, Eq. 3) on a tiny untrained model."""
+"""Importance-sampling readout on a tiny untrained model."""
 import argparse
 import math
 

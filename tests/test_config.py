@@ -54,13 +54,13 @@ def test_config_loads(path):
 
 @pytest.mark.parametrize("path", CONFIGS, ids=ids)
 def test_transport_builds_and_has_room_to_pool(path):
-    """Lemma 4 (§A.7) needs every axis of the coarsest pyramid level to have length >= 2."""
+    """Local equivariance (§A.7) needs every axis of the coarsest pyramid level to have length >= 2."""
     cfg = load_config(path)
     if not cfg.transport:
         return
     rates = build_transport(cfg)
     rates.network._pyramid(torch.zeros(1, 1, *cfg.lattice_shape))
-    # The Metropolis-form rates of Eq. (7) exist for the 3D alloys only.
+    # The Metropolis-form rates exist for the 3D alloys only.
     assert rates.metropolis_rates == (bool(cfg.metropolis_rates) and cfg.system != "ising")
 
 

@@ -23,7 +23,7 @@ def log_mean_exp(A):
 
 
 def ess(A):
-    """Normalized ESS (sum w)^2 / (M sum w^2), Eq. (1)."""
+    """Normalized ESS (sum w)^2 / (M sum w^2)."""
     a = A - A.max()
     return float(np.mean(np.exp(a)) ** 2 / np.mean(np.exp(2 * a)))
 

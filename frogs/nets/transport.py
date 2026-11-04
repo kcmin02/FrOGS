@@ -108,7 +108,7 @@ class StateDependentConv(nn.Module):
 
 
 def leave_one_out_mean(x):
-    """Mean of every spin other than i, which is invariant to flipping sigma_i (Lemma 5(iii))."""
+    """Mean of every spin other than i, which is invariant to flipping sigma_i."""
     dims = tuple(range(2, x.dim()))
     n = 1
     for d in dims:
@@ -195,7 +195,7 @@ class LocEquivUNet(nn.Module):
             levels.append(self._pool(levels[-1], stride))
         if min(levels[-1].shape[2:]) < 2:
             raise ValueError("every axis of the coarsest pyramid level must have length >= 2 "
-                             "(§A.7, Lemma 4); reduce num_levels or use anisotropic pool_strides")
+                             "(§A.7); reduce num_levels or use anisotropic pool_strides")
         return levels
 
     def forward(self, x, t, c):
@@ -214,10 +214,10 @@ class LocEquivUNet(nn.Module):
 
 
 class RateMatrix(nn.Module):
-    """Single-flip CTMC rates from the U-Net output g (Eq. 4-6).
+    """Single-flip CTMC rates from the U-Net output g.
 
-    With `metropolis_rates` the rates are [g]_+ * M with M = exp(-[Delta U_t]_+) (Eq. 7), whose
-    corrector is the bounded -sum_i g_i M_i (Prop. 1); otherwise the LEAPS rates [g]_+.
+    With `metropolis_rates` the rates are [g]_+ * M with M = exp(-[Delta U_t]_+), whose
+    corrector is the bounded -sum_i g_i M_i; otherwise the LEAPS rates [g]_+.
     """
 
     def __init__(self, network: LocEquivUNet, metropolis_rates: bool = False):
@@ -259,7 +259,7 @@ class RateMatrix(nn.Module):
         return sigma
 
     def corrector(self, sigma, t, dU, c, g=None):
-        """sum over moves of the rate-matrix term of K_t rho_t (Eq. 15 / Eq. 24), shape (B,)."""
+        """sum over moves of the rate-matrix term of K_t rho_t, shape (B,)."""
         if g is None:
             g = self.forward(sigma, t, c)
         if self.metropolis_rates:

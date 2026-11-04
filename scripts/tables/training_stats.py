@@ -1,6 +1,6 @@
-"""Tables 2 and 3: training-time statistics over the final optimizer steps of each run.
+"""Training-time statistics over the final optimizer steps of each run.
 
-    python scripts/tables/training_stats.py results/cuau_ce/tab2-cuau-ar32-mcmc10-1/metrics.csv ...
+    python scripts/tables/training_stats.py results/cuau_ce/hparams-cuau-ar32-mcmc10-1/metrics.csv ...
 
 Reports the median and 99th percentile of `train_loss` and of `A_corrected_std` (the per-step spread
 of A_1 + F(1, c) - F(0, c)) over the last `--last` steps; non-finite entries are excluded and counted.

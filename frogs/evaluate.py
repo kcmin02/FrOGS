@@ -1,4 +1,4 @@
-"""Importance-sampling readout of a trained model on a grid of conditions (Eq. 2, Eq. 3).
+"""Importance-sampling readout of a trained model on a grid of conditions.
 
 At each c = (dmu, T): log Z(c) = log Z_0 + log E[e^A], the composition <N_+>/N, and the ESS.
 log E[e^A] is reported as mean(A) + var(A)/2 (`logZ`) and as logsumexp(A) - log M (`logZ_raw`).
@@ -57,7 +57,7 @@ def bootstrap_se(A, n_plus, n_sites, n_boot, rng):
 
 
 class ISEvaluator:
-    """Roll M walkers per condition through the trained CTMC and read out Eq. (2)-(3)."""
+    """Roll M walkers per condition through the trained CTMC and read out log Z, x and the ESS."""
 
     def __init__(self, model, M=1000, n_steps=None, n_mcmc=0, seed=0, device=None,
                  transport=None):

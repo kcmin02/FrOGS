@@ -15,7 +15,7 @@ num_channels: 16
 encoder_convs: 1
 decoder_convs: 1
 loo_context: true
-metropolis_rates: true        # Eq. (7)
+metropolis_rates: true
 
 free_energy_hidden: [200, 200, 200, 200]
 lr: 3.0e-4

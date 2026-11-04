@@ -1,4 +1,4 @@
-# Table 2 arm: AR width 64, n_mcmc 200.
+# CuAu with AR width 16 and n_mcmc 10.
 system: cuau_ce
 lattice_shape: [8, 4, 4]
 table_path: data/cuau_cluster_tables_8x4x4.npz
@@ -6,7 +6,7 @@ cond_low: [-0.2, 200.0]       # [dmu (eV), T (K)]
 cond_high: [0.15, 1200.0]
 
 prior: autoregressive
-prior_net: {num_layers: 4, num_channels: 64, kernel_size: 3}
+prior_net: {num_layers: 4, num_channels: 16, kernel_size: 3}
 prior_lr: 1.0e-4
 prior_backend: systems        # fused Triton kernels; `reference` restores the original arithmetic
 sym_penalty: 0.1
@@ -19,7 +19,7 @@ num_channels: 16
 encoder_convs: 1
 decoder_convs: 1
 loo_context: true
-metropolis_rates: true        # Eq. (7)
+metropolis_rates: true
 
 free_energy_hidden: [200, 200, 200, 200]
 lr: 3.0e-4
@@ -31,12 +31,12 @@ max_steps: 200000
 n_steps: 125
 starting_k: 1
 n_anneal: 60000
-n_mcmc: 200
+n_mcmc: 10
 batch_size: 50
 loss_batch_size: 100
 buffer_size: 100
 buffer_cycle: 100
 
 wandb_project: frogs-cuau
-run_tag: tab2-cuau-ar64-mcmc200
+run_tag: hparams-cuau-ar16-mcmc10
 seed:
