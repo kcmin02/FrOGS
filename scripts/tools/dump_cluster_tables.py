@@ -1,4 +1,4 @@
-"""Regenerate a cluster table in data/ from the vendored ECI json with CLEASE (§A.1, §A.9).
+"""Regenerate a cluster table in data/ from the ECI files in data/reference/ with CLEASE (§A.1, §A.9).
 
     python scripts/tools/dump_cluster_tables.py --system cuau --size 8 4 4
     python scripts/tools/dump_cluster_tables.py --system agpd --size 5 5 5
@@ -18,7 +18,7 @@ import torch
 from frogs.energy import ClusterExpansion
 from frogs.paths import REFERENCE_DIR, data_file
 
-# Settings of the upstream SGC-AR notebooks; `z` is the atomic number of sigma = +1, -1.
+# Settings of the SEGAL notebooks; `z` is the atomic number of sigma = +1, -1.
 SYSTEMS = {
     "cuau": dict(eci="ECI_CuAu_Final_Submission.json", elements=["Au", "Cu"],
                  z=(79, 29), a=3.8, max_cluster_dia=[6.0, 4.5, 4.5], size=(8, 4, 4)),
@@ -121,7 +121,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--system", choices=sorted(SYSTEMS), required=True)
     ap.add_argument("--size", type=int, nargs=3,
-                    help="supercell in primitive fcc cells (default: the production cell)")
+                    help="supercell in primitive fcc cells (default: the cell in configs/)")
     ap.add_argument("--out", help="output .npz (default: the matching file in data/)")
     args = ap.parse_args()
 

@@ -1,8 +1,8 @@
 """YAML run configuration.
 
 A config is a flat YAML file (see `configs/`) loaded into an `argparse.Namespace`, which is also
-what Lightning stores in a checkpoint. `normalize` fills defaults and translates the key names
-used by older checkpoints.
+what Lightning stores in a checkpoint. `normalize` fills defaults and translates earlier key
+names.
 """
 from __future__ import annotations
 

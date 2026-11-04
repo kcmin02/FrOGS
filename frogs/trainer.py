@@ -4,8 +4,8 @@ Each step draws conditions c uniformly from the training box, births walkers fro
 rolls them out to t = k * dt, and minimizes (-d_t U_t - corrector + d_t F)^2 on (sigma, t) pairs
 from that rollout or from a replay buffer of earlier rollouts. The number of CTMC steps k
 ramps up quadratically to `n_steps` over `n_anneal` optimizer steps. `sym_penalty` adds
-sym_penalty * mean (log rho_0(sigma | c) - log rho_0(g.sigma | g.c))^2 with g uniform in the
-symmetry group of the target.
+sym_penalty * mean (log rho_0(sigma | c) - log rho_0(gamma sigma | gamma c))^2 with gamma
+uniform in the symmetry group of the target.
 """
 from __future__ import annotations
 

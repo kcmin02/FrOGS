@@ -1,4 +1,4 @@
-"""Mean over the symmetry group of KL(rho_0(. | c) || rho_0(g. | g.c)) on a grid of conditions.
+"""Mean over gamma of KL(rho_0(. | c) || rho_0(gamma . | gamma c)) on a grid of conditions.
 
     python scripts/checks/check_symmetry.py --ckpt <run>/ckpts/last.ckpt [--M 2000] [--n-mu 5]
 """

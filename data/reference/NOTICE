@@ -1,6 +1,6 @@
-Every file in this directory is redistributed from a third party. None of it
-is an input to FrOGS; it is the ground truth the results are checked against,
-plus the cluster expansions the energy is built from.
+Every file in this directory is redistributed from a third party. The ECI files
+define the cluster-expansion energies (through the tables in data/); the
+metadynamics files are used only for comparison.
 
 Source:
 

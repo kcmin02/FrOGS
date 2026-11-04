@@ -1,6 +1,6 @@
 """Exactness of the learned-prior path: Z_0 = 1, U_1 = beta * H_c, telescoping log-weights.
 
-Z_0 is summed over all 2^16 configurations of the 16-site CuAu cell; the 128-site production cell
+Z_0 is summed over all 2^16 configurations of the 16-site CuAu cell; the 128-site cell
 re-checks U_1 and the gradient coupling to the prior (§A.5). Exits non-zero if any check fails.
 """
 from __future__ import annotations
@@ -93,7 +93,7 @@ def check_enumerable():
     return ok
 
 
-def check_production_cell():
+def check_128_site_cell():
     print("=== 128-site 8x4x4 cell ===")
     e = build("cuau_cluster_tables_8x4x4.npz", (8, 4, 4))
     B = 12
@@ -120,7 +120,7 @@ def main():
     # Exact identities checked to ~1e-7 need fp64; tables take the default dtype at construction.
     torch.set_default_dtype(torch.float64)
     ok = check_enumerable()
-    ok &= check_production_cell()
+    ok &= check_128_site_cell()
     print("\nALL PASS" if ok else "\nSOME FAILED")
     sys.exit(0 if ok else 1)
 

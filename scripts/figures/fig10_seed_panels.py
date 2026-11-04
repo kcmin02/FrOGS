@@ -2,7 +2,7 @@
 
 Each input is a sweep npz or a rungs npz written by fig3_phase_diagram.py:
     python scripts/figures/fig10_seed_panels.py \
-        --panel "seed 1 (production)=figures/fig3_cuau_<sweep_s1>.npz" \
+        --panel "seed 1=figures/fig3_cuau_<sweep_s1>.npz" \
         --panel "seed 2=<sweep_s2>.npz" --panel "seed 3=..." --panel "seed 4=..."
 """
 from __future__ import annotations

@@ -1,4 +1,4 @@
-# Systems backend for the autoregressive prior
+# Fused-kernel backend for the autoregressive prior
 
 `prior_backend: systems` runs the no-grad operations of the prior rho_0(sigma | c) through fused
 Triton kernels replayed as CUDA graphs (`frogs/nets/systems/`): ancestral sampling, and the
@@ -22,7 +22,7 @@ log-weights still accumulate in FP64. Results are not bitwise identical to the r
 
 ## Accuracy
 
-Maximum absolute error against an FP64 copy of the prior, CuAu production checkpoint (8x4x4,
+Maximum absolute error against an FP64 copy of the prior, `configs/cuau_128.yml` checkpoint (8x4x4,
 64 channels), batch 3, normalized conditions (-1, -1), (0, 0), (1, 1):
 
 ```bash
@@ -46,8 +46,8 @@ condition the graph-replayed sampler reproduced the reference samples and CUDA R
 python scripts/bench_speed.py --ckpt <run>/ckpts/last.ckpt --compile
 ```
 
-CuAu production checkpoint, batch 16, no Metropolis moves, compiled prior, mean of 7 repetitions
-after 3 warm-ups, one RTX A5000 shared with another job (timings are indicative):
+`configs/cuau_128.yml` checkpoint, batch 16, no Metropolis moves, compiled prior, mean of 7 repetitions
+after 3 warm-ups, one RTX A5000 (timings are indicative):
 
 | operation | reference (ms) | systems (ms) | speedup |
 | --- | ---: | ---: | ---: |

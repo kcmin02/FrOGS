@@ -17,7 +17,7 @@ from frogs.trainer import FrOGSModule
 
 
 def load_model(path, device=None, compile=True, backend=None):
-    """Load a trained model (current or older checkpoint format) for evaluation."""
+    """Load a trained model for evaluation."""
     torch.serialization.add_safe_globals([argparse.Namespace])
     device = device or ("cuda" if torch.cuda.is_available() else "cpu")
     model = FrOGSModule.load_from_checkpoint(path, map_location=device).to(device).eval()

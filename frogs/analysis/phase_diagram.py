@@ -2,6 +2,8 @@
 
 Fixed-composition free energies f(x, T) from the importance weights, lower convex
 hull of f(x) per temperature, and the width / depth / persistence gates that certify tie-lines.
+A rung is a tie-line certified at one temperature; a lobe is one two-phase region, the rungs linked
+by x-overlap across temperatures.
 """
 from __future__ import annotations
 

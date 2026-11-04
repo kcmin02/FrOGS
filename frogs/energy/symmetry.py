@@ -1,4 +1,4 @@
-"""Symmetry group of the target: g with beta * H(g.sigma | g.c) = beta * H(sigma | c) + const(c)."""
+"""Symmetry group of the target: the maps gamma that leave beta H_c invariant up to a constant."""
 from __future__ import annotations
 
 import itertools
@@ -131,7 +131,7 @@ def detect_symmetry(energy, device=None, n_configs=8, n_conds=4, rtol=1e-4, seed
 
 
 def log_prior_gap(energy, group, sigma, c):
-    """log rho_0(sigma | c) - log rho_0(g.sigma | g.c) for one uniform g per row."""
+    """log rho_0(sigma | c) - log rho_0(gamma sigma | gamma c) for one uniform gamma per row."""
     if not energy.learned_prior:
         return sigma.new_zeros(sigma.shape[0])
     g_sigma, g_c = group.apply(group.sample(sigma.shape[0], sigma.device), sigma, c)

@@ -15,7 +15,7 @@ from frogs.paths import ROOT, resolve_data_file
 CONFIGS = sorted(glob.glob(os.path.join(ROOT, "configs", "**", "*.yml"), recursive=True))
 ids = [os.path.relpath(p, ROOT) for p in CONFIGS]
 
-# The recorded config of the CuAu production checkpoint, minus machine paths.
+# A CuAu checkpoint config in the earlier key names, minus machine paths.
 LEGACY_CUAU = dict(
     F_hidden_sizes=[200, 200, 200, 200], L=8, accelerator="gpu", anneal_quadratic=True,
     arch="conv_unet3d", base_lr=0.0003, beta_0=0.0, beta_1=58.0, bs_for_loss_per_gpu=100,

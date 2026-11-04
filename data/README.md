@@ -12,7 +12,8 @@ per cluster orbit the site indices of every occurrence (`cluster_<name>_indices`
 They are derived from the ECI files in `reference/` and can be regenerated with
 `scripts/tools/dump_cluster_tables.py` (requires CLEASE and ASE).
 
-`reference/` holds the cluster expansions and the metadynamics reference free energies F(x, T) of
-Damewood et al. (2022), used only for comparison in Fig. 3 (see `reference/NOTICE`).
+`reference/` holds the cluster expansions of Damewood et al. (2022), which define the energies, and
+their metadynamics reference free energies F(x, T), used only for comparison in Fig. 3 (see
+`reference/NOTICE`).
 
 The 2D Ising model needs no data. Set `FROGS_DATA_DIR` to keep the data elsewhere.

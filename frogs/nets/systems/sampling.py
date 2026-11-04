@@ -1,4 +1,4 @@
-"""Ancestral sampling of the AR prior with per-site activation caches (CPU fallback of the backend)."""
+"""Ancestral sampling with per-site activation caches, used when the fused kernels do not apply."""
 from __future__ import annotations
 
 import torch
