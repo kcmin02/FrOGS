@@ -18,7 +18,7 @@ pytest
 ```
 
 Training and sweeps need a GPU. The fused prior kernels (`prior_backend: systems`, see
-[docs/performance.md](docs/performance.md)) run on Ampere-or-newer GPUs; elsewhere the prior uses
+[docs/performance.md](docs/performance.md)) for better performance run on Ampere-or-newer GPUs; elsewhere the prior uses
 plain PyTorch.
 
 ## Train models
