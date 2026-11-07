@@ -1,9 +1,7 @@
 # Fused-kernel backend for the autoregressive prior
 
 `prior_backend: systems` runs the no-grad operations of the prior rho_0(sigma | c) through fused
-Triton kernels replayed as CUDA graphs (`frogs/nets/systems/`): ancestral sampling, and the
-all-site flip scores log rho_0(flip_i sigma | c) - log rho_0(sigma | c) that enter Delta U_t at
-every CTMC step. Calls that carry gradients (log rho_0 in the training loss), CPU tensors and
+Triton kernels replayed as CUDA graphs (`frogs/nets/systems/`). Calls that carry gradients (log rho_0 in the training loss), CPU tensors and
 non-FP32 inputs keep the reference PyTorch path. It needs an Ampere-or-newer GPU and at most 64
 prior channels; fused sampling also needs the 3x3x3 kernel.
 
